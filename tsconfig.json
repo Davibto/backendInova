@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    // File Layout
+    "rootDir": ".",              // incluir toda a raiz do projeto
+    "outDir": "./dist",
+
+    // Environment Settings
+    "module": "node16",
+    "target": "es2022",
+    "types": [],
+    "lib": ["ES2023"],
+
+    // Caminhos absolutos a partir de "src/"
+    "baseUrl": "./src",
+    "paths": {
+      "controllers/*": ["controllers/*"],
+      "services/*": ["services/*"],
+      "validators/*": ["validators/*"],
+      "routes/*": ["routes/*"],
+      "lib/*": ["lib/*"]
+    },
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Recommended Options
+    "strict": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true
+  },
+  "include": ["src", "prisma"],  // incluir pasta src e prisma
+  "exclude": ["node_modules", "dist"]
+}
