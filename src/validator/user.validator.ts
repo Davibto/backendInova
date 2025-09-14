@@ -32,7 +32,7 @@ export const patchUserSchema = z.object({
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type GetUsersInput = z.infer<typeof getUsersSchema>;
-export type GetUserIDInput = z.infer<typeof getUserIDSchema>;
 export type PutUserInput = z.infer<typeof putUserSchema>;
+export type GetUserIDInput = z.infer<typeof getUserIDSchema>;
 export type DeleteUserInput = z.infer<typeof deleteUserSchema>;
 export type PatchUserInput = z.infer<typeof patchUserSchema>;

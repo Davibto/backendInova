@@ -4,19 +4,29 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  const users = [];
+  console.log("Iniciando o processo de seeding...");
 
-  for (let i = 1; i <= 20; i++) {
-    users.push({
-      name: `User${i}`,
-      email: `user${i}@example.com`,
-      password: await bcrypt.hash(`senha${i}`, 10),
-    });
-  }
+  // Opcional: Limpa a tabela de usuários para um estado inicial limpo
+  await prisma.user.deleteMany();
+  console.log("Usuários antigos removidos.");
 
+  // Cria um array de promessas para a geração de hash das senhas
+  const userPromises = Array.from({ length: 20 }, (_, i) => {
+    const userIndex = i + 1;
+    return bcrypt.hash(`senha${userIndex}`, 10).then(passwordHash => ({
+      name: `User${userIndex}`,
+      email: `user${userIndex}@example.com`,
+      password: passwordHash,
+    }));
+  });
+
+  // Executa todas as promessas em paralelo
+  const users = await Promise.all(userPromises);
+
+  // Insere todos os usuários de uma vez
   await prisma.user.createMany({
     data: users,
-    skipDuplicates: true,
+    skipDuplicates: true, // Ignora se o usuário já existir
   });
 
   console.log("20 usuários criados com sucesso!");
@@ -24,4 +34,6 @@ async function main() {
 
 main()
   .catch(console.error)
-  .finally(async () => await prisma.$disconnect());
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

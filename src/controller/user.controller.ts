@@ -25,31 +25,26 @@ export async function createUserController(request: FastifyRequest, reply: Fasti
   }
 }
 
-export async function getUserController(request: FastifyRequest, reply: FastifyReply) {   
-    try {
-        // Validar requisicao
-        const data = getUsersSchema.parse(request.params);
+export async function getUserController(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  try {
 
-        // Chamar service
-        const users = await getUsersService(data);
+    // Validar entrada    
+    const data = getUsersSchema.parse(request.query);
+    // Chamar service
+    const users = await getUsersService(data);
 
     return reply.status(200).send(users);
   } catch (err: any) {
-        // Erro de validação do Zod
-        if (err instanceof ZodError) {
-            return reply.status(400).send({ error: err.issues.map(i => i.message) });
-        }
+    if (err instanceof ZodError) {
+      return reply.status(400).send({ error: err.issues[0]?.message });
+    }
 
-        // Erro customizado do service (ex: nenhum usuário encontrado)
-        if (err.message === "Nenhum usuário encontrado") {
-            return reply.status(404).send({ error: err.message });
-        }
-
-        // Erro inesperado
-        console.error(err);
-        return reply.status(500).send({ error: "Erro ao buscar usuários" });
-
-        }
+    console.error(err);
+    return reply.status(500).send({ error: "Erro ao listar usuarios" });
+  }
 }
 
 export async function getUserIDController(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
