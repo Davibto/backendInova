@@ -30,6 +30,18 @@ async function main() {
   });
 
   console.log("20 usuários criados com sucesso!");
+
+  // 👉 Cria o usuário fixo "teste"
+  const hashedPassword = await bcrypt.hash("123456", 10);
+  await prisma.user.create({
+    data: {
+      name: "teste",
+      email: "teste@example.com",
+      password: hashedPassword,
+    },
+  });
+
+  console.log("Usuário fixo 'teste' criado com sucesso!");
 }
 
 main()

@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Modelo do banco de dados com id gerado no formato UUID, nome, email unico e senha
 model User {
   id String @id @default(uuid()) @db.Uuid // identificador único universal
   name String

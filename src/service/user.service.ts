@@ -10,6 +10,7 @@ export async function createUserService(data: CreateUserInput) {
     where: { email },
   });
 
+  // Se ja existir retorna erro
   if (existingUser) {
     throw new Error("Email ja cadastrado");
   }
@@ -32,10 +33,13 @@ export async function createUserService(data: CreateUserInput) {
 }
 
 export async function getUsersService(data: GetUsersInput) {
+    // converte os valores para numeros, a pagina padrao igual é a 1, e o limit de de usuarios por pagina padrao é 10
     const page = parseInt(data.page || "1");
     const limit = parseInt(data.limit || "10");
+    // Calcula quantos registros devem ser pulados para pegar a página correta
     const skip = (page - 1) * limit;
 
+    // Busca os usuários no banco de dados usando o Prisma e retorna os usuarios
     const users = await prisma.user.findMany({ skip, take: limit, select: {id: true, name: true, email: true,}});
     return {users};
 }
@@ -43,15 +47,17 @@ export async function getUsersService(data: GetUsersInput) {
 export async function getUserIDService(data: GetUserIDInput) {
     const { id } = data;
 
-    // Buscar usuário pelo ID
+    // Busca usuario pelo ID
     const existingUser = await prisma.user.findUnique({
         where: { id },
     });
 
+    // Se nao encontrar retorna erro
     if (!existingUser) {
         throw new Error("Usuario nao encontrado");
     }
 
+    // Retorna o nome e o email do usuario pelo ID
     const { name, email } = existingUser;
     return { name, email };
 }
@@ -59,10 +65,12 @@ export async function getUserIDService(data: GetUserIDInput) {
 export async function putUserService(data: PutUserInput) {
     const {id, name, email } = data;
 
+    // Busca usuario pelo ID
     const existingUser = await prisma.user.findUnique({
     where: { id },
     });
 
+    // Se nao encontrar retorna erro
     if (!existingUser) {
         throw new Error("Usuario nao encontrado");
     }
@@ -72,9 +80,9 @@ export async function putUserService(data: PutUserInput) {
     where: { id },
     data: {
       name: name ?? existingUser.name, // se nao vier no body mantem
-      email: email ?? existingUser.email
+      email: email ?? existingUser.email // se nao vier no body mantem
     },
-    select: {
+    select: { // Seleciona apenas os campos a serem retornados
       id: true,
       name: true,
       email: true
@@ -93,6 +101,7 @@ export async function deleteUserService(data: DeleteUserInput) {
     where: { id },
   });
 
+  // Se nao encontrar retorna erro
   if (!existingUser) {
     throw new Error("Usuario nao encontrado");
   }
@@ -114,6 +123,7 @@ export async function patchUserService(data: PatchUserInput) {
     where: { id },
   });
 
+  // Se nao encontrar retorna erro
   if (!existingUser) {
     throw new Error("Usuario nao encontrado");
   }
@@ -128,7 +138,7 @@ export async function patchUserService(data: PatchUserInput) {
   const patchedUser = await prisma.user.update({
     where: { id },
     data: updateData,
-    select: {
+    select: { // Seleciona apenas os campos a serem retornados
       id: true,
       name: true,
       email: true,
