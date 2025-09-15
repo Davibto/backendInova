@@ -70,3 +70,16 @@ backendInova/
     ```bash
     npm run dev
     ```
+## Endpoints da API
+
+### Autenticação
+
+-   `POST /auth/login`: Realiza o login do usuário e retorna um token JWT.
+
+### Usuários
+
+-   `GET /users`: Lista todos os usuários.
+-   `GET /users/:id`: Obtém os detalhes de um usuário específico.
+-   `PUT /users/:id`: Atualiza os dados de um usuário.
+-   `DELETE /users/:id`: Remove um usuário.
+-   `PATCH /users/:id/password`: Atualiza a senha de um usuário.
